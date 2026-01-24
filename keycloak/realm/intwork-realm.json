@@ -9,7 +9,8 @@
     "realm": [
       { "name": "ADMIN", "description": "System administrator" },
       { "name": "MANAGER", "description": "Department manager" },
-      { "name": "EMPLOYEE", "description": "Standard employee" }
+      { "name": "EMPLOYEE", "description": "Standard employee" },
+      { "name": "view-profile", "description": "Can view profiles" }
     ]
   },
   "users": [
@@ -20,14 +21,19 @@
       "emailVerified": true,
       "firstName": "Davide",
       "lastName": "Surname",
-      "credentials": [{ "type": "password", "value": "Hello1234", "temporary": false }],
-      "realmRoles": ["ADMIN"],
-      "groups": ["IT"],
-      "attributes": {
-        "scimId": ["u-0001"],
-        "department": ["IT"],
-        "title": ["Backend Engineer"]
-      }
+      "credentials": [{ "type": "password", "value": "a", "temporary": false }],
+      "realmRoles": ["default-roles-intwork"]
+
+    },
+    {
+      "username": "tester",
+      "enabled": true,
+      "email": "tester@adiwave.io",
+      "emailVerified": true,
+      "firstName": "Test",
+      "lastName": "User",
+      "credentials": [{ "type": "password", "value": "password", "temporary": false }],
+      "realmRoles": ["view-profile"]
     }
   ],
   "clientScopes": [
@@ -97,19 +103,6 @@
   ],
   "clients": [
     {
-      "clientId": "gateway-rest-api",
-      "name": "API Gateway Client",
-      "enabled": true,
-      "clientAuthenticatorType": "client-secret",
-      "secret": "BlWIMuzIc4B8LqHpv0LXru7cqzVIO3td",
-      "redirectUris": ["http://localhost:9090/*"],
-      "webOrigins": ["*"],
-      "standardFlowEnabled": true,
-      "directAccessGrantsEnabled": true,
-      "protocol": "openid-connect",
-      "defaultClientScopes": ["openid","roles", "profile", "email", "user:read", "user:write"]
-    },
-    {
       "clientId": "gateway-rest-client",
       "name": "gateway-rest-client",
       "description": "gateway-rest-client description",
@@ -158,7 +151,7 @@
       "fullScopeAllowed": true,
       "nodeReRegistrationTimeout": -1,
       "defaultClientScopes": [
-        "service_account",
+        "oidc",
         "web-origins",
         "acr",
         "roles",
