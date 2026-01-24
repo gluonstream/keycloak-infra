@@ -1,0 +1,72 @@
+
+services:
+  # 1. Database: Store KeyCloak tables + custom SCIM schema
+  postgres:
+    image: postgres:16
+    container_name: postgres-keycloakdb
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+    command: -p 5431
+    # Port 5431 is still mapped for local DB tools dbeaver
+    ports:
+      - "5431:5431"
+    volumes:
+      - postgres-data-intwork:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h postgres-keycloakdb -p 5431 -U keycloak -d keycloak"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - adiwave-network
+
+  # 2. Keycloak: Vanilla official image and settings
+  keycloak:
+    image: keycloak/keycloak:26.5.2
+    container_name: keycloak-intwork-idp
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: localhost
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME_STRICT: "false"
+      KC_PROXY: edge
+      KC_DB_URL: jdbc:postgresql://postgres-keycloakdb:5431/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+    command:
+      - start
+      - --optimized
+      - --import-realm
+      - --http-enabled=true
+      - --hostname-strict=false
+      - --proxy-headers=xforwarded
+      - --cache=local
+    ports:
+      - "8004:8080"
+      - "8005:8443"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/9000' || exit 1"]
+      interval: 5s
+      timeout: 2s
+      retries: 5
+      start_period: 25s
+    volumes:
+      - ./keycloak/realm/intwork-realm.json:/opt/keycloak/data/import/intwork-realm.json:ro
+      - keycloak-data-intwork:/opt/keycloak/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - adiwave-network
+
+networks:
+  adiwave-network:
+    driver: bridge
+
+volumes:
+  postgres-data-intwork:
+  keycloak-data-intwork:
