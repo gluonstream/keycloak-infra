@@ -1,0 +1,77 @@
+{
+  "realm": "second",
+  "enabled": true,
+  "sslRequired": "NONE",
+  "loginWithEmailAllowed": true,
+  "registrationAllowed": false,
+  "accessTokenLifespan": 300,
+  "roles": {
+    "realm": [
+      { "name": "USER", "description": "Standard user role" },
+      { "name": "ADMIN", "description": "Administrator role" }
+    ]
+  },
+  "users": [
+    {
+      "username": "user1",
+      "enabled": true,
+      "email": "user1@example.com",
+      "emailVerified": true,
+      "firstName": "User",
+      "lastName": "One",
+      "credentials": [{ "type": "password", "value": "password", "temporary": false }],
+      "realmRoles": ["USER"]
+    },
+    {
+      "username": "user2",
+      "enabled": true,
+      "email": "user2@example.com",
+      "emailVerified": true,
+      "firstName": "User",
+      "lastName": "Two",
+      "credentials": [{ "type": "password", "value": "password", "temporary": false }],
+      "realmRoles": ["ADMIN", "USER"]
+    }
+  ],
+  "clientScopes": [
+    {
+      "name": "openid",
+      "protocol": "openid-connect",
+      "attributes": { "include.in.token.scope": "true", "display.on.consent.screen": "true" }
+    },
+    {
+      "name": "roles",
+      "protocol": "openid-connect",
+      "attributes": { "include.in.token.scope": "true", "display.on.consent.screen": "true" },
+      "protocolMappers": [
+        {
+          "name": "realm roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "config": { "multivalued": "true", "claim.name": "roles", "access.token.claim": "true" }
+        }
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "second-client",
+      "name": "Second Client",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "very-secret-key-12345",
+      "redirectUris": ["*"],
+      "webOrigins": ["*"],
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "protocol": "openid-connect",
+      "fullScopeAllowed": true,
+      "defaultClientScopes": [
+        "web-origins",
+        "roles",
+        "profile",
+        "email"
+      ]
+    }
+  ]
+}
