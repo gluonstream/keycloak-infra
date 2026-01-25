@@ -49,6 +49,20 @@
         { "name": "given name", "protocol": "openid-connect", "protocolMapper": "oidc-usermodel-property-mapper", "config": { "user.attribute": "firstName", "claim.name": "given_name", "access.token.claim": "true" } },
         { "name": "family name", "protocol": "openid-connect", "protocolMapper": "oidc-usermodel-property-mapper", "config": { "user.attribute": "lastName", "claim.name": "family_name", "access.token.claim": "true" } }
       ]
+    },
+    {
+      "name": "iaka",
+      "protocol": "openid-connect",
+      "protocolMappers": [
+        { "name": "iaka", "protocol": "openid-connect", "protocolMapper": "oidc-usermodel-attribute-mapper", "config": { "user.attribute": "username", "claim.name": "iaka1", "jsonType.label": "String", "access.token.claim": "true" } }
+      ],
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "true",
+        "gui.order": "",
+        "consent.screen.text": "iaka_screen_text",
+        "include.in.openid.provider.metadata": "true"
+      }
     }
   ],
   "clients": [
@@ -106,7 +120,8 @@
       ],
       "optionalClientScopes": [
         "uma_authorization",
-        "roles"
+        "roles",
+        "iaka"
       ],
       "access": {
         "view": true,
