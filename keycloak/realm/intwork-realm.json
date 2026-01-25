@@ -1,4 +1,5 @@
 {
+  "id": "intwork",
   "realm": "intwork",
   "enabled": true,
   "sslRequired": "NONE",
@@ -7,43 +8,12 @@
   "accessTokenLifespan": 300,
   "roles": {
     "realm": [
-      { "name": "ADMIN", "description": "System administrator" },
-      { "name": "MANAGER", "description": "Department manager" },
-      { "name": "EMPLOYEE", "description": "Standard employee" }
+      { "name": "admin", "description": "System administrator" },
+      { "name": "manager", "description": "Department manager" },
+      { "name": "employee", "description": "Standard employee" }
     ]
   },
-  "users": [
-    {
-      "username": "davide",
-      "enabled": true,
-      "email": "davide@adiwave.io",
-      "emailVerified": true,
-      "firstName": "Davide",
-      "lastName": "Surname",
-      "credentials": [{ "type": "password", "value": "Hello1234", "temporary": false }],
-      "realmRoles": ["ADMIN"],
-      "groups": ["IT"],
-      "attributes": {
-        "scimId": ["u-0001"],
-        "department": ["IT"],
-        "title": ["Backend Engineer"]
-      }
-    }
-  ],
   "clientScopes": [
-    {
-      "name": "openid",
-      "protocol": "openid-connect",
-      "attributes": { "include.in.token.scope": "true", "display.on.consent.screen": "true" },
-      "protocolMappers": [
-        {
-          "name": "realm roles",
-          "protocol": "openid-connect",
-          "protocolMapper": "oidc-usermodel-realm-role-mapper",
-          "config": { "multivalued": "true", "claim.name": "roles", "access.token.claim": "true" }
-        }
-      ]
-    },
     {
       "name": "roles",
       "protocol": "openid-connect",
@@ -53,62 +23,35 @@
           "name": "realm roles",
           "protocol": "openid-connect",
           "protocolMapper": "oidc-usermodel-realm-role-mapper",
-          "config": { "multivalued": "true", "claim.name": "roles", "access.token.claim": "true" }
+          "config": { "multivalued": "true", "claim.name": "roles", "jsonType.label": "String", "access.token.claim": "true" }
+        },
+        {
+          "name": "client roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-client-role-mapper",
+          "config": { "multivalued": "true", "claim.name": "resource_access.${client_id}.roles", "jsonType.label": "String", "access.token.claim": "true" }
         }
       ]
     },
     {
-      "name": "user:read",
+      "name": "profile",
       "protocol": "openid-connect",
-      "attributes": { "include.in.token.scope": "true", "display.on.consent.screen": "true" },
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "true",
+        "gui.order": "",
+        "consent.screen.text": "${profileScopeConsentText}",
+        "include.in.openid.provider.metadata": "true"
+      },
       "protocolMappers": [
-        {
-          "name": "user-read-mapper",
-          "protocol": "openid-connect",
-          "protocolMapper": "oidc-hardcoded-claim-mapper",
-          "config": {
-            "claim.name": "permissions",
-            "claim.value": "user:read",
-            "jsonType.label": "String",
-            "access.token.claim": "true",
-            "id.token.claim": "true"
-          }
-        }
-      ]
-    },
-    {
-      "name": "user:write",
-      "protocol": "openid-connect",
-      "attributes": { "include.in.token.scope": "true", "display.on.consent.screen": "true" },
-      "protocolMappers": [
-        {
-          "name": "user-write-mapper",
-          "protocol": "openid-connect",
-          "protocolMapper": "oidc-hardcoded-claim-mapper",
-          "config": {
-            "claim.name": "permissions",
-            "claim.value": "user:write",
-            "jsonType.label": "String",
-            "access.token.claim": "true"
-          }
-        }
+        { "name": "full name", "protocol": "openid-connect", "protocolMapper": "oidc-full-name-mapper", "config": { "id.token.claim": "true", "access.token.claim": "true" } },
+        { "name": "username", "protocol": "openid-connect", "protocolMapper": "oidc-usermodel-property-mapper", "config": { "user.attribute": "username", "claim.name": "preferred_username", "access.token.claim": "true" } },
+        { "name": "given name", "protocol": "openid-connect", "protocolMapper": "oidc-usermodel-property-mapper", "config": { "user.attribute": "firstName", "claim.name": "given_name", "access.token.claim": "true" } },
+        { "name": "family name", "protocol": "openid-connect", "protocolMapper": "oidc-usermodel-property-mapper", "config": { "user.attribute": "lastName", "claim.name": "family_name", "access.token.claim": "true" } }
       ]
     }
   ],
   "clients": [
-    {
-      "clientId": "gateway-rest-api",
-      "name": "API Gateway Client",
-      "enabled": true,
-      "clientAuthenticatorType": "client-secret",
-      "secret": "BlWIMuzIc4B8LqHpv0LXru7cqzVIO3td",
-      "redirectUris": ["http://localhost:9090/*"],
-      "webOrigins": ["*"],
-      "standardFlowEnabled": true,
-      "directAccessGrantsEnabled": true,
-      "protocol": "openid-connect",
-      "defaultClientScopes": ["openid","roles", "profile", "email", "user:read", "user:write"]
-    },
     {
       "clientId": "gateway-rest-client",
       "name": "gateway-rest-client",
@@ -147,38 +90,57 @@
         "post.logout.redirect.uris": "http://localhost:9090/*",
         "oauth2.device.authorization.grant.enabled": "false",
         "backchannel.logout.revoke.offline.tokens": "false",
-        "realm_client": "false",
+        "realm_client": "true",
         "oidc.ciba.grant.enabled": "false",
         "backchannel.logout.session.required": "true",
-        "display.on.consent.screen": "false",
-        "pkce.code.challenge.method": "S256",
+        "display.on.consent.screen": "true",
         "dpop.bound.access.tokens": "false"
       },
       "authenticationFlowBindingOverrides": {},
       "fullScopeAllowed": true,
       "nodeReRegistrationTimeout": -1,
       "defaultClientScopes": [
-        "service_account",
-        "web-origins",
-        "acr",
-        "roles",
+        "openid",
         "profile",
-        "basic",
-        "email"
+        "default-roles-intwork"
       ],
       "optionalClientScopes": [
-        "address",
-        "phone",
-        "organization",
-        "user:read",
-        "offline_access",
-        "user:write",
-        "microprofile-jwt"
+        "uma_authorization",
+        "roles"
       ],
       "access": {
         "view": true,
         "configure": true,
         "manage": true
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "davide",
+      "enabled": true,
+      "email": "davide@adiwave.io",
+      "firstName": "Davide",
+      "lastName": "Surname",
+      "emailVerified": true,
+      "credentials": [{ "type": "password", "value": "a", "temporary": false }],
+      "realmRoles": ["admin"],
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"],
+        "realm-management": ["view-users", "query-users"]
+      }
+    },
+    {
+      "username": "adrian",
+      "enabled": true,
+      "email": "adrian@adiwave.io",
+      "firstName": "Adrian",
+      "lastName": "Vrabie",
+      "emailVerified": true,
+      "credentials": [{ "type": "password", "value": "a", "temporary": false }],
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"],
+        "realm-management": ["view-users", "query-users"]
       }
     }
   ]
