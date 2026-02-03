@@ -1,0 +1,394 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: keycloak-namespace
+---
+apiVersion: v1
+data:
+  intwork-realm.json: |-
+    {
+      "id": "intwork",
+      "realm": "intwork",
+      "enabled": true,
+      "sslRequired": "NONE",
+      "loginWithEmailAllowed": true,
+      "registrationAllowed": false,
+      "accessTokenLifespan": 300,
+      "roles": {
+        "realm": [
+          { "name": "admin", "description": "System administrator" },
+          { "name": "manager", "description": "Department manager" },
+          { "name": "employee", "description": "Standard employee" }
+        ]
+      },
+      "clientScopes": [
+        {
+          "name": "roles",
+          "protocol": "openid-connect",
+          "attributes": { "include.in.token.scope": "true", "display.on.consent.screen": "true" },
+          "protocolMappers": [
+            {
+              "name": "realm roles",
+              "protocol": "openid-connect",
+              "protocolMapper": "oidc-usermodel-realm-role-mapper",
+              "config": { "multivalued": "true", "claim.name": "roles", "jsonType.label": "String", "access.token.claim": "true" }
+            },
+            {
+              "name": "client roles",
+              "protocol": "openid-connect",
+              "protocolMapper": "oidc-usermodel-client-role-mapper",
+              "config": { "multivalued": "true", "claim.name": "resource_access.${client_id}.roles", "jsonType.label": "String", "access.token.claim": "true" }
+            }
+          ]
+        },
+        {
+          "name": "profile",
+          "protocol": "openid-connect",
+          "attributes": {
+            "include.in.token.scope": "true",
+            "display.on.consent.screen": "true",
+            "gui.order": "",
+            "consent.screen.text": "${profileScopeConsentText}",
+            "include.in.openid.provider.metadata": "true"
+          },
+          "protocolMappers": [
+            { "name": "full name", "protocol": "openid-connect", "protocolMapper": "oidc-full-name-mapper", "config": { "id.token.claim": "true", "access.token.claim": "true" } },
+            { "name": "username", "protocol": "openid-connect", "protocolMapper": "oidc-usermodel-property-mapper", "config": { "user.attribute": "username", "claim.name": "preferred_username", "access.token.claim": "true" } },
+            { "name": "given name", "protocol": "openid-connect", "protocolMapper": "oidc-usermodel-property-mapper", "config": { "user.attribute": "firstName", "claim.name": "given_name", "access.token.claim": "true" } },
+            { "name": "family name", "protocol": "openid-connect", "protocolMapper": "oidc-usermodel-property-mapper", "config": { "user.attribute": "lastName", "claim.name": "family_name", "access.token.claim": "true" } }
+          ]
+        },
+        {
+          "name": "iaka",
+          "protocol": "openid-connect",
+          "protocolMappers": [
+            { "name": "iaka", "protocol": "openid-connect", "protocolMapper": "oidc-usermodel-attribute-mapper", "config": { "user.attribute": "username", "claim.name": "iaka1", "jsonType.label": "String", "access.token.claim": "true" } }
+          ],
+          "attributes": {
+            "include.in.token.scope": "true",
+            "display.on.consent.screen": "true",
+            "gui.order": "",
+            "consent.screen.text": "iaka_screen_text",
+            "include.in.openid.provider.metadata": "true"
+          }
+        }
+      ],
+      "clients": [
+        {
+          "clientId": "gateway-rest-client",
+          "name": "gateway-rest-client",
+          "description": "gateway-rest-client description",
+          "rootUrl": "http://localhost:9090",
+          "adminUrl": "http://localhost:9090",
+          "baseUrl": "http://localhost:9090",
+          "surrogateAuthRequired": false,
+          "enabled": true,
+          "alwaysDisplayInConsole": false,
+          "clientAuthenticatorType": "client-secret",
+          "secret": "TqOwvN7EBjXbX4ymF7v9VV3IftfbcpjM",
+          "redirectUris": [
+            "http://localhost:9090/*",
+            "https://oauth.pstmn.io/v1/callback"
+          ],
+          "webOrigins": [
+            "*"
+          ],
+          "notBefore": 0,
+          "bearerOnly": false,
+          "consentRequired": false,
+          "standardFlowEnabled": true,
+          "implicitFlowEnabled": false,
+          "directAccessGrantsEnabled": true,
+          "serviceAccountsEnabled": true,
+          "publicClient": false,
+          "frontchannelLogout": true,
+          "protocol": "openid-connect",
+          "attributes": {
+            "logout.confirmation.enabled": "false",
+            "client.secret.creation.time": "1768760927",
+            "oauth2.jwt.authorization.grant.enabled": "true",
+            "standard.token.exchange.enabled": "false",
+            "frontchannel.logout.session.required": "true",
+            "post.logout.redirect.uris": "http://localhost:9090/*",
+            "oauth2.device.authorization.grant.enabled": "false",
+            "backchannel.logout.revoke.offline.tokens": "false",
+            "realm_client": "true",
+            "oidc.ciba.grant.enabled": "false",
+            "backchannel.logout.session.required": "true",
+            "display.on.consent.screen": "true",
+            "dpop.bound.access.tokens": "false"
+          },
+          "authenticationFlowBindingOverrides": {},
+          "fullScopeAllowed": true,
+          "nodeReRegistrationTimeout": -1,
+          "defaultClientScopes": [
+            "openid",
+            "profile",
+            "default-roles-intwork"
+          ],
+          "optionalClientScopes": [
+            "uma_authorization",
+            "roles",
+            "iaka"
+          ],
+          "access": {
+            "view": true,
+            "configure": true,
+            "manage": true
+          }
+        }
+      ],
+      "users": [
+        {
+          "username": "davide",
+          "enabled": true,
+          "email": "davide@adiwave.io",
+          "firstName": "Davide",
+          "lastName": "Surname",
+          "emailVerified": true,
+          "credentials": [{ "type": "password", "value": "a", "temporary": false }],
+          "realmRoles": ["admin"],
+          "clientRoles": {
+            "account": ["view-profile", "manage-account"],
+            "realm-management": ["view-users", "query-users"]
+          }
+        },
+        {
+          "username": "adrian",
+          "enabled": true,
+          "email": "adrian@adiwave.io",
+          "firstName": "Adrian",
+          "lastName": "Vrabie",
+          "emailVerified": true,
+          "credentials": [{ "type": "password", "value": "a", "temporary": false }],
+          "clientRoles": {
+            "account": ["view-profile", "manage-account"],
+            "realm-management": ["view-users", "query-users"]
+          }
+        }
+      ]
+    }
+kind: ConfigMap
+metadata:
+  name: keycloak-realm
+  namespace: keycloak-namespace
+---
+apiVersion: v1
+data:
+  password: a2V5Y2xvYWs=
+kind: Secret
+metadata:
+  name: db-secrets
+  namespace: keycloak-namespace
+type: Opaque
+---
+apiVersion: v1
+data:
+  password: YWRtaW4=
+kind: Secret
+metadata:
+  name: keycloak-admin-secrets
+  namespace: keycloak-namespace
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+  namespace: keycloak-namespace
+spec:
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  - name: https
+    port: 8443
+    targetPort: 8443
+  selector:
+    app: keycloak
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-db
+  namespace: keycloak-namespace
+spec:
+  ports:
+  - port: 5430
+    targetPort: 5430
+  selector:
+    app: postgres
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: keycloak-pvc
+  namespace: keycloak-namespace
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: keycloak-namespace
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  namespace: keycloak-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+      - args:
+        - start
+        - --import-realm
+        - --http-enabled=true
+        - --hostname-strict=false
+        - --proxy-headers=xforwarded
+        - --cache=local
+        - --health-enabled=true
+        env:
+        - name: KC_BOOTSTRAP_ADMIN_USERNAME
+          value: admin
+        - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: keycloak-admin-secrets
+        - name: KC_HOSTNAME
+          value: localhost
+        - name: KC_HTTP_ENABLED
+          value: "true"
+        - name: KC_HOSTNAME_STRICT
+          value: "false"
+        - name: KC_PROXY
+          value: edge
+        - name: KC_DB
+          value: postgres
+        - name: KC_DB_URL
+          value: jdbc:postgresql://postgres-db:5430/keycloak
+        - name: KC_DB_USERNAME
+          value: keycloak
+        - name: KC_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: db-secrets
+        image: keycloak/keycloak:26.5.2
+        livenessProbe:
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          tcpSocket:
+            port: 8080
+        name: keycloak
+        ports:
+        - containerPort: 8080
+          name: http
+        - containerPort: 8443
+          name: https
+        readinessProbe:
+          httpGet:
+            path: /health/live
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        volumeMounts:
+        - mountPath: /opt/keycloak/data/import/intwork-realm.json
+          name: realm-config
+          readOnly: true
+          subPath: intwork-realm.json
+        - mountPath: /opt/keycloak/data
+          name: keycloak-data
+      volumes:
+      - configMap:
+          name: keycloak-realm
+        name: realm-config
+      - name: keycloak-data
+        persistentVolumeClaim:
+          claimName: keycloak-pvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-db
+  namespace: keycloak-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - args:
+        - -p
+        - "5430"
+        env:
+        - name: POSTGRES_DB
+          value: keycloak
+        - name: POSTGRES_USER
+          value: keycloak
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: db-secrets
+        image: postgres:16
+        livenessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -p
+            - "5430"
+            - -U
+            - keycloak
+            - -d
+            - keycloak
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        name: postgres
+        ports:
+        - containerPort: 5430
+        readinessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -p
+            - "5430"
+            - -U
+            - keycloak
+            - -d
+            - keycloak
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgres-data
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: postgres-pvc
