@@ -39,7 +39,7 @@ spec:
               name: keycloak-admin-secrets
               key: password
         - name: KC_HOSTNAME
-          value: "keycloak.keycloak-namespace.svc.cluster.local"
+          value: "auth.s4v3.local"
         - name: KC_HTTP_ENABLED
           value: "true"
         - name: KC_HOSTNAME_STRICT
