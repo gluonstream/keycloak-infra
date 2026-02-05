@@ -80,6 +80,10 @@
       "secret": "TqOwvN7EBjXbX4ymF7v9VV3IftfbcpjM",
       "redirectUris": [
         "http://localhost:9090/*",
+        "http://s4v3.local/*",
+        "https://s4v3.local/*",
+        "http://s4v3.net/*",
+        "https://s4v3.net/*",
         "https://oauth.pstmn.io/v1/callback"
       ],
       "webOrigins": [
