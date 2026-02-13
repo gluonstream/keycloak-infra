@@ -6,7 +6,8 @@ resources:
   - postgres-pvc.yaml
   - postgres.yaml
   - keycloak.yaml
-  - keycloak-ingress.yaml
+#  - keycloak-gateway-nginx.yaml
+  - old/keycloak-gateway-kong.yaml
 
 namespace: keycloak-namespace
 

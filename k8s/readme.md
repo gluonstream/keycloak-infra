@@ -8,5 +8,8 @@ kubectl get all -n keycloak-namespace
 Either:
 kubectl port-forward svc/keycloak 8002:8080 -n keycloak-namespace
 
+(Deprecated)
 Or, if Ingress is enabled:
 kubectl apply -f kind/keycloak-ingress.yaml
+
+Use the Gateway in K8S
