@@ -1,5 +1,10 @@
 # Gateway API Setup
 
+# TL;DR 
+```bash
+./cluster_kind_setup.sh
+```
+
 ## 0. Create Kind Cluster with Gateway Support
 
 ```bash
@@ -42,5 +47,6 @@ kubectl get gatewayclass
 After installing the CRDs and a controller, you should be able to apply the manifests in the `k8s/` folder without errors:
 
 ```bash
-kubectl apply -k k8s
+kubectl apply -k k8s/nginx-gateway
+kubectl apply -k k8s/keycloak
 ```

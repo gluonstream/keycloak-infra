@@ -2,11 +2,11 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - namespace.yaml
+  - keycloak-namespace.yaml
   - postgres-pvc.yaml
   - postgres.yaml
   - keycloak.yaml
-  - keycloak-gateway-nginx.yaml
+  - keycloak-httpRoute.yaml
 
 namespace: keycloak-namespace
 
