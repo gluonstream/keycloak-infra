@@ -33,3 +33,16 @@ spec:
       backendRefs:
         - name: keycloak
           port: 8080
+---
+apiVersion: gateway.nginx.org/v1alpha1
+kind: ClientSettingsPolicy
+metadata:
+  name: keycloak-client-settings
+  namespace: keycloak-namespace
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: Gateway
+    name: keycloak-gateway
+  body:
+    maxSize: 300m

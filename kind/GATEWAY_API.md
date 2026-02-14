@@ -79,7 +79,7 @@ If you are using Kind with the port mappings from `kind/kind-cluster.yaml`, you 
 kubectl apply -f kind/nginx-proxy-config.yaml
 ```
 
-This will update the NGINX Gateway proxy pods to bind to port 80 and 443 on the Kind node.
+This will update the NGINX Gateway proxy pods to bind to port 80 and 443 on the Kind node. Large file uploads are configured via a `ClientSettingsPolicy` targeting the `Gateway` (see `k8s/keycloak-gateway-nginx.yaml`).
 
 ## 4. Verify Installation
 
