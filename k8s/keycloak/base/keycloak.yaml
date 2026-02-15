@@ -30,28 +30,15 @@ spec:
           name: https
         - containerPort: 9000
           name: management
+        envFrom:
+        - configMapRef:
+            name: keycloak-env
         env:
-        - name: KC_BOOTSTRAP_ADMIN_USERNAME
-          value: admin
         - name: KC_BOOTSTRAP_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
               name: keycloak-admin-secrets
               key: password
-        - name: KC_HOSTNAME
-          value: "auth.s4v3.local"
-        - name: KC_HTTP_ENABLED
-          value: "true"
-        - name: KC_HOSTNAME_STRICT
-          value: "false"
-        - name: KC_PROXY
-          value: edge
-        - name: KC_DB
-          value: postgres
-        - name: KC_DB_URL
-          value: jdbc:postgresql://postgres-db:5430/keycloak
-        - name: KC_DB_USERNAME
-          value: keycloak
         - name: KC_DB_PASSWORD
           valueFrom:
             secretKeyRef:

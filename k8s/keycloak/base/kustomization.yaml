@@ -7,13 +7,9 @@ resources:
   - postgres.yaml
   - keycloak.yaml
   - keycloak-httpRoute.yaml
+  - keycloak-realm-configmap.yaml
 
 namespace: keycloak-namespace
-
-configMapGenerator:
-  - name: keycloak-realm
-    files:
-      - intwork-realm.json
 
 secretGenerator:
   - name: db-secrets

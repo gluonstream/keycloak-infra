@@ -9,6 +9,7 @@ spec:
       namespace: gateway-namespace
   hostnames:
     - auth.s4v3.local
+    - auth.s4v3.net
   rules:
     - matches:
         - path:
