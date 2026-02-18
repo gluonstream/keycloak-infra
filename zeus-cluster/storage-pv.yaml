@@ -1,0 +1,33 @@
+# This PV is for the postgres-pvc
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv-1
+spec:
+  capacity:
+    storage: "25Gi"
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs
+  nfs:
+    path: /mnt/storage_k8s/postgres
+    server: 192.168.188.16
+---
+# This PV is for the keycloak-pvc
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv-2
+spec:
+  capacity:
+    storage: "25Gi"
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs
+  nfs:
+    path: /mnt/storage_k8s/keycloak
+    server: 192.168.188.16

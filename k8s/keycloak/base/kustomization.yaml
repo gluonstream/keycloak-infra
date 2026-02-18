@@ -6,7 +6,6 @@ resources:
   - postgres-pvc.yaml
   - postgres.yaml
   - keycloak.yaml
-  - keycloak-httpRoute.yaml
   - keycloak-realm-configmap.yaml
 
 namespace: keycloak-namespace
