@@ -50,3 +50,18 @@ After installing the CRDs and a controller, you should be able to apply the mani
 kubectl apply -k k8s/nginx-gateway
 kubectl apply -k k8s/keycloak
 ```
+
+For Windows To Set Up a V6Tov4:
+```bash
+netsh interface portproxy add v6tov4 listenaddress=:: listenport=80 connectaddress=127.0.0.1 connectport=80
+```
+```bash
+netstat -ano | findstr :30080
+netstat -ano | findstr :80
+```
+```bash
+netsh interface portproxy show all
+```
+
+netsh interface portproxy delete v6tov4 listenaddress=:: listenport=30080
+netsh interface portproxy delete v6tov4 listenaddress=:: listenport=80

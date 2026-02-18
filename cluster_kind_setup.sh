@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 echo "Hello K8S Kind Cluster"
 kind create cluster --config kind/kind-cluster.yaml
 kubectl apply --server-side -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.1/standard-install.yaml
