@@ -33,6 +33,7 @@ services:
       KC_HOSTNAME: localhost
       KC_HTTP_ENABLED: "true"
       KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
       KC_PROXY: edge
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://postgres-keycloakdb:5430/keycloak
@@ -44,6 +45,7 @@ services:
       - --http-enabled=true
       - --hostname-strict=false
       - --proxy-headers=xforwarded
+      - --health-enabled=true
       - --cache=local
     ports:
       - "8002:8080"
