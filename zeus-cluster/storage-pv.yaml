@@ -5,7 +5,7 @@ metadata:
   name: nfs-pv-1
 spec:
   capacity:
-    storage: "25Gi"
+    storage: "5Gi"
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
@@ -22,7 +22,7 @@ metadata:
   name: nfs-pv-2
 spec:
   capacity:
-    storage: "25Gi"
+    storage: "5Gi"
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
