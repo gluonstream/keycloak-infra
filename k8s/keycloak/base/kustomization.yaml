@@ -3,7 +3,6 @@ kind: Kustomization
 
 resources:
   - keycloak-namespace.yaml
-  - postgres-pvc.yaml
   - postgres.yaml
   - keycloak.yaml
   - keycloak-realm-configmap.yaml
