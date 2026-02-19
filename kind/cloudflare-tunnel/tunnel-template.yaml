@@ -1,0 +1,9 @@
+tunnel: 12a4efec-e30c-4f7e-ad42-e9a85dfefbdb
+credentials-file: /Users/moldo/.cloudflared/12a4efec-e30c-4f7e-ad42-e9a85dfefbdb.json
+
+ingress:
+  - hostname: s4v3.net
+    service: http://127.0.0.1:80
+    originRequest:
+      httpHostHeader: s4v3.net
+  - service: http_status:404
