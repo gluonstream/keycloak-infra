@@ -3,7 +3,8 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - keycloak-local-configmap.yaml
+  - keycloak-net-configmap.yaml
   - keycloak-httpRoute.yaml
+  - reference-grant.yaml
 
 namespace: keycloak-namespace

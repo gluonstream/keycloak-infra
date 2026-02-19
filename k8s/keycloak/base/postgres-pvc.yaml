@@ -4,7 +4,8 @@ metadata:
   name: postgres-pvc
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
+  storageClassName: nfs
   resources:
     requests:
       storage: 1Gi
@@ -15,7 +16,8 @@ metadata:
   name: keycloak-pvc
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
+  storageClassName: nfs
   resources:
     requests:
       storage: 1Gi
