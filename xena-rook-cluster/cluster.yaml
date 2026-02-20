@@ -1,0 +1,52 @@
+apiVersion: ceph.rook.io/v1
+kind: CephCluster
+metadata:
+  name: rook-ceph
+  namespace: rook-ceph
+spec:
+  cephVersion:
+    # Using the stable 2026 image
+    image: quay.io/ceph/ceph:v19.2.3
+    allowUnsupported: false
+
+  # The path on the host for mon and osd metadata
+  dataDirHostPath: /var/lib/rook
+
+  # CRITICAL: This allows the Zeus cluster to connect to Xena's host IPs
+  network:
+    provider: host
+
+  mon:
+    count: 3                # Quorum for your 4-node cluster
+    allowMultiplePerNode: false
+
+  mgr:
+    count: 2                # Active/Standby managers
+    modules:
+      - name: pg_autoscaler
+        enabled: true
+
+  dashboard:
+    enabled: true           # Enables the Ceph Web UI
+    ssl: false              # Set to true in production with certs
+
+  storage:
+    useAllNodes: true
+    useAllDevices: false # IMPORTANT: Change this to false
+    config:
+      # Tell Rook to store data in a directory instead of a raw disk
+      databaseSizeMB: "1024"
+      journalSizeMB: "1024"
+    directories:
+      - path: /var/lib/rook-data # This is where your OSDs will live
+
+  # Health settings to prevent the cluster from getting stuck during reboots
+  healthCheck:
+    daemonHealth:
+      mon:
+        interval: 45s
+        timeout: 600s
+
+  # Cleanup policy (Uncomment to wipe data when the cluster is deleted)
+  # cleanupPolicy:
+  #   confirmation: "yes-really-destroy-data"
