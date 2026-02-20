@@ -1,0 +1,4 @@
+# values.yaml
+# Add any specific overrides here if needed
+image:
+  pullPolicy: IfNotPresent

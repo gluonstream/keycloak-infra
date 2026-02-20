@@ -9,6 +9,10 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
+  # Retain policy means the volume is not automatically deleted when the PVC is deleted.
+  # If you delete the PVC and recreate it, this PV will be in a "Released" state.
+  # You must manually edit the PV (kubectl edit pv nfs-pv-1), remove the "claimRef" section,
+  # and then the new PVC can bind to it.
   persistentVolumeReclaimPolicy: Retain
   storageClassName: nfs
   nfs:
@@ -26,6 +30,10 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
+  # Retain policy means the volume is not automatically deleted when the PVC is deleted.
+  # If you delete the PVC and recreate it, this PV will be in a "Released" state.
+  # You must manually edit the PV (kubectl edit pv nfs-pv-2), remove the "claimRef" section,
+  # and then the new PVC can bind to it.
   persistentVolumeReclaimPolicy: Retain
   storageClassName: nfs
   nfs:

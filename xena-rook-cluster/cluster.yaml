@@ -1,0 +1,62 @@
+apiVersion: ceph.rook.io/v1
+kind: CephCluster
+metadata:
+  name: rook-ceph
+  namespace: rook-ceph
+spec:
+  cephVersion:
+    # Using the stable Squid release (v19) for 2026
+    image: quay.io/ceph/ceph:v19.2.3
+    allowUnsupported: false
+
+  # The path on the host for mon and osd metadata (NOT for the bulk data)
+  dataDirHostPath: /var/lib/rook
+
+  # CRITICAL: Allows Zeus cluster to connect to Xena's host IPs directly
+  network:
+    provider: host
+
+  mon:
+    count: 3                # Quorum for your 4-node cluster
+    allowMultiplePerNode: false
+
+  mgr:
+    count: 2                # Active/Standby managers
+    modules:
+      - name: pg_autoscaler
+        enabled: true
+
+  dashboard:
+    enabled: true
+    ssl: false
+
+  storage:
+    useAllNodes: true
+    useAllDevices: false
+    # This targets the 150G virtual disks you created on xena-01 through 04
+    deviceFilter: "^loop0"
+    config:
+      # Database and Journal sizes tuned for your 150GB loop volumes
+      databaseSizeMB: "1024"
+      journalSizeMB: "1024"
+      osdsPerDevice: "1"
+
+  # Prevents the cluster from getting stuck during rolling reboots
+  healthCheck:
+    daemonHealth:
+      mon:
+        interval: 45s
+        timeout: 600s
+      osd:
+        interval: 60s
+        timeout: 600s
+
+  # Crash Collector settings
+  crashCollector:
+    disable: false
+
+  # Cleanup policy - safely disabled by default
+  cleanupPolicy:
+    confirmation: ""
+    sanitizeDisks:
+      method: quick
