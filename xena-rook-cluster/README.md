@@ -1,4 +1,6 @@
 ## How to install Rook on K8S Xena Cluster
+# switch to XENA CLUSTER
+xena
 
 helm repo add rook-release https://charts.rook.io/release
 helm repo update
