@@ -3,8 +3,10 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - storage-pv.yaml
   - postgres-pvc.yaml
   - keycloak-net-configmap.yaml
   - keycloak-httpRoute.yaml
+  - reference-grant.yaml
 
 namespace: keycloak-namespace

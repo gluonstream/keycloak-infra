@@ -4,6 +4,6 @@ kind: Kustomization
 resources:
   - gateway-namespace.yaml
   - gateway-traefik.yaml
-  - traefik-middleware.yaml
+#  - traefik-middleware.yaml
 
 namespace: gateway-namespace
